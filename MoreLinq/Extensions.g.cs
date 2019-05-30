@@ -5138,6 +5138,52 @@ namespace MoreLinq.Extensions
 
     }
 
+    /// <summary><c>Squash</c> extension.</summary>
+
+    [GeneratedCode("MoreLinq.ExtensionsGenerator", "1.0.0.0")]
+    public static partial class SquashExtension
+    {
+        /// <summary>
+        /// Takes the source sequence and removes recurring items in series.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in <paramref name="source"/> sequence.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <returns>The sequence with items occuring more than once in seris removed.</returns>
+        /// <remarks>
+        /// This operator uses deferred execution and streams its results (buckets and bucket content).
+        /// </remarks>
+        public static IEnumerable<TSource> Squash<TSource>(this IEnumerable<TSource> source)             => MoreEnumerable.Squash(source);
+
+        /// <summary>
+        /// Takes the source sequence and removes recurring items in series using a key selector for comparison.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in <paramref name="source"/> sequence.</typeparam>
+        /// <typeparam name="TKey">The type of the key elements selected from <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="keySelector">The projection to apply to select a comparison key.</param>
+        /// <returns>The sequence with items occuring more than once in seris removed.</returns>
+        /// <remarks>
+        /// This operator uses deferred execution and streams its results (buckets and bucket content).
+        /// </remarks>
+        public static IEnumerable<TSource> Squash<TSource, TKey>(this IEnumerable<TSource> source,
+                                                                      Func<TSource, TKey> keySelector)             => MoreEnumerable.Squash(source, keySelector);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="keySelector"></param>
+        /// <param name="equalityComparer"></param>
+        /// <returns></returns>
+        public static IEnumerable<TSource> Squash<TSource, TKey>(this IEnumerable<TSource> source,
+                                                                      Func<TSource, TKey> keySelector,
+                                                                      IEqualityComparer<TKey> equalityComparer)
+            => MoreEnumerable.Squash(source, keySelector, equalityComparer);
+
+    }
+
     /// <summary><c>StartsWith</c> extension.</summary>
 
     [GeneratedCode("MoreLinq.ExtensionsGenerator", "1.0.0.0")]
