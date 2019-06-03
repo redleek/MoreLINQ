@@ -54,7 +54,7 @@ namespace MoreLinq
             {
                 using (var enumer = source.GetEnumerator())
                 {
-                    enumer.MoveNext();
+                    if (!enumer.MoveNext()) yield break;
                     var prev = enumer.Current;
 
                     while (enumer.MoveNext())
