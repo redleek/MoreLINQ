@@ -5169,14 +5169,17 @@ namespace MoreLinq.Extensions
                                                                       Func<TSource, TKey> keySelector)             => MoreEnumerable.Squash(source, keySelector);
 
         /// <summary>
-        /// 
+        /// Takes the source sequence and removes recurring items in series using a key selector for comparison using a given equality comparer.
         /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TKey"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="keySelector"></param>
-        /// <param name="equalityComparer"></param>
-        /// <returns></returns>
+        /// <typeparam name="TSource">ype of the elements in <paramref name="source"/> sequence.</typeparam>
+        /// <typeparam name="TKey">The type of the key elements selected from <paramref name="keySelector"/>.</typeparam>
+        /// <param name="source">The source sequence.</param>
+        /// <param name="keySelector">The projection to apply to select a comparison key.</param>
+        /// <param name="equalityComparer">The comparer used to compare the equality of keys given by <paramref name="keySelector"/>.</param>
+        /// <returns>The sequence with items occuring more than once in seris removed.</returns>
+        /// <remarks>
+        /// This operator uses deferred execution and streams its results (buckets and bucket content).
+        /// </remarks>
         public static IEnumerable<TSource> Squash<TSource, TKey>(this IEnumerable<TSource> source,
                                                                       Func<TSource, TKey> keySelector,
                                                                       IEqualityComparer<TKey> equalityComparer)
