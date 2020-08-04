@@ -1,6 +1,24 @@
+#region License and Terms
+// MoreLINQ - Extensions to LINQ to Objects
+// Copyright (c) 2010 Leopold Bushkin. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+#endregion
+
 namespace MoreLinq.Test
 {
-    using System;
+    using System.Collections.Generic;
+    using NUnit.Framework.Interfaces;
     using NUnit.Framework;
 
     /// <summary>
@@ -129,6 +147,30 @@ namespace MoreLinq.Test
 
             Assert.AreEqual(sequence.Distinct().Count(), result.Count());
             Assert.IsTrue(result.All(s => s.Count() == repCount));
+        }
+
+        static IEnumerable<T> Seq<T>(params T[] values) => values;
+
+        public static readonly IEnumerable<ITestCaseData> TestData =
+            from e in new[]
+            {
+                // input sequence is empty
+                new { Source = Seq<int>(),            Expected = Seq<IEnumerable<int>>()         },
+                // input sequence contains only new segment start
+                new { Source = Seq(0, 3, 6),          Expected = Seq(Seq(0), Seq(3), Seq(6))     },
+                // input sequence do not contains new segment start
+                new { Source = Seq(1, 2, 4, 5),       Expected = Seq(Seq(1, 2, 4, 5))            },
+                // input sequence start with a segment start
+                new { Source = Seq(0, 1, 2, 3, 4, 5), Expected = Seq(Seq(0, 1, 2), Seq(3, 4, 5)) },
+                // input sequence do not start with a segment start
+                new { Source = Seq(1, 2, 3, 4, 5),    Expected = Seq(Seq(1, 2), Seq(3, 4, 5))    }
+            }
+            select new TestCaseData(e.Source).Returns(e.Expected);
+
+        [Test, TestCaseSource(nameof(TestData))]
+        public IEnumerable<IEnumerable<int>> TestSegment(IEnumerable<int> source)
+        {
+            return source.AsTestingSequence().Segment(v => v % 3 == 0);
         }
     }
 }
